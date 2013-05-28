@@ -31,12 +31,12 @@ class AbletonPlus():
                 
         if(self._options.has_key('Master')):
             if(self._options['Master']):
-                self._master = Master()
+                self._master = True
                 
             else:
-                self._master = None
+                self._master = False
         else:
-            self._master = None
+            self._master = False
             
         
         return None
