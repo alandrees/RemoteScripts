@@ -22,9 +22,8 @@ class BCR2000(ControlSurface, AbletonPlus):
         self._mixer = None
                
         for index in range(0, 24):
-            encoder = EncoderElement(MIDI_CC_TYPE,0,92 + index,Live.MidiMap.MapMode.absolute)
-            self._main_encoders.append(encoder)
-        
+            encoder = EncoderElement(MIDI_CC_TYPE,0,81 + index,Live.MidiMap.MapMode.absolute)
+            self._main_encoders.append(encoder)    
         for index in range(0,16):
             button = ButtonElement(False, MIDI_CC_TYPE,0, 76 + index)
             self._main_buttons.append(button)
@@ -56,6 +55,7 @@ class BCR2000(ControlSurface, AbletonPlus):
             strip.set_mute_button(self._main_buttons[index * 2])
             strip.set_arm_button(self._main_buttons[(index * 2)+ 1])
             strip.set_send_controls((self._main_encoders[index * 3],))
+        
         return None
     
     def offset_update(self):
