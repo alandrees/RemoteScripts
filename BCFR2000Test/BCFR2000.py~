@@ -6,12 +6,12 @@ from _AbletonPlus.AbletonPlus import *
 from _AbletonPlus.abletonlog import *
 from _Framework.MixerComponent import *
 from _Framework.SliderElement import *
-from BCRF2000Options import options
+from BCFR2000Options import options
 from _AbletonPlus.Master import Master
 from BCR2000 import BCR2000
 from BCF2000 import BCF2000
 
-class BCRF2000(ControlSurface,AbletonPlus):
+class BCFR2000(ControlSurface,AbletonPlus):
     """BCFR Control Surface Class"""
 
     def __init__(self, c_instance):
