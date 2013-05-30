@@ -1,13 +1,26 @@
 #########################
-#### AbletonPlus Implementation
-#### Version 2
+#### Inter-Controller Communication Implementation
+#### 2.0
+#### Copyright 2013 Alan Drees
 ####
-#### Just provides the communication protocol and standards to use this system, leaves the actual implementation up to the controller (client) scripts
-#### Removes inheritence dependence, and makes use of class composition instead.
+#### Purpose: Provides a way for all of the different script instances to notify eachother of events
+####
+#### Note: This library can be tested without involving live whatsoever, using the provided test environment
+####       but it is designed for use with Ableton Live 8.3 Build 2012-03-29_4920da10f1.
+####
+#### This library is free software; you can redistribute it and/or modify it under the terms of the 
+#### GNU Lesser General Public License as published by the Free Software Foundation; either version 
+#### 2.1 of the License, or (at your option) any later version.
+####
+#### This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+#### without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+#### See the GNU Lesser General Public License for more details.
+####
+#### You should have received a copy of the GNU Lesser General Public License along with this library; if not, 
+#### write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
-#import Live
-#from _AbletonPlus.Master import Master
-#from _AbletonPlus.Options import Options
+
+import Live
 
 class AbletonPlus():
 
@@ -99,14 +112,14 @@ class AbletonPlus():
             return False
 
     ###GETTER FUNCTIONS
-    def get_getter(self, getter, **kwargs):
+    def getter(self, getter, **kwargs):
         if getter in AbletonPlus._getter_callbacks.keys():
             return AbletonPlus._getter_callbacks[getter][0](self._instance,getter,**kwargs)
         else:
             assert("Assert.  Getter" + getter + " failed.  Script Halted.")  
 
     ###SETTER FUNCTIONS
-    def set_setter(self, setter, **kwargs):
+    def setter(self, setter, **kwargs):
         ignore_self = True
         if "ignore_self" in kwargs: 
             ignore_self = kwargs["ignore_self"]
