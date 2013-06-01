@@ -55,10 +55,10 @@ class AbletonPlus():
         if self._instance not in AbletonPlus._enabled_devices:
             self.register_callbacks(self._options["callbacks"])
             AbletonPlus._add_controller(self._instance, self._options["master"])
-            self.fire_event("ap_add",callbacks=self._options["callbacks"],ignore_self=True) #sends a notification that this controller has been enabled
+            self.fire_event("ap_add",sender=self._instance,callbacks=self._options["callbacks"],ignore_self=True) #sends a notification that this controller has been enabled
 
     def disable_abletonplus(self):
-        i = AbletonPlus._enabled_devices.index(self)
+        i = AbletonPlus._enabled_devices.index(self._instance)
         
         AbletonPlus._enabled_devices.pop(i)
         
@@ -104,9 +104,9 @@ class AbletonPlus():
             for cb in AbletonPlus._event_callbacks[event]:
                 if hasattr(self._instance, cb.__name__) and ignore_self:
                     if cb != getattr(self._instance, cb.__name__):
-                        cb(self._instance, event, **kwargs)               
+                        cb( event, **kwargs)               
                 else:
-                    cb(self._instance, event, **kwargs)                   
+                    cb(event, **kwargs)                   
             return True
         else:
             return False
@@ -143,3 +143,42 @@ class AbletonPlus():
         
     def is_not_master(self):
         return not self._master
+
+
+##utility functions for ableton plus
+def ap_add_default_options(instance, options, add = None, remove = None, enable = None, disable = None):
+    #add the onadd event
+    if add == None:
+        if hasattr(instance, "_ape_add"):
+            options.update({'ap_add':instance._ape_add})
+        else:
+            assert("ableton plus add event is a requirement.  No function provided, and default not found.  Halting script.")
+    else:
+        options.update({'ap_add':add})
+
+    #add the onremove event
+    if remove == None:
+        if hasattr(instance, "_ape_rem"):
+            options.update({'ap_remove':instance._ape_rem})
+        else:
+            assert("ableton plus remove event is a requirement.  No function provided, and default not found.  Halting script.")
+    else:
+        options.update({'ap_remove':remove})
+
+        #add the onenable event
+    if enable == None:
+        if hasattr(instance, "_ape_ena"):
+            options.update({'ap_enable':instance._ape_ena})
+        else:
+            assert("ableton plus enable event is a requirement.  No function provided, and default not found.  Halting script.")
+    else:
+        options.update({'ap_enable':enable})
+
+    #add the disable event
+    if disable == None:
+        if hasattr(instance, "_ape_dis"):
+            options.update({'ap_disable':instance._ape_dis})
+        else:
+            assert("ableton plus add event is a requirement.  No function provided, and default not found.  Halting script.")
+    else:
+        options.update({'ap_disable':disable})

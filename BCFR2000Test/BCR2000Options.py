@@ -1,3 +1,3 @@
 import Live
 options = dict()
-options.update({'master':False})
+options.update('abletonplus:' {'master':False,'callbacks':[]} )
