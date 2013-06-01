@@ -13,7 +13,7 @@ MIXER_MODE  = 8
 OPTIONS_MODE = 16
 
 options = {
-    'master':True,
+    'abletonplus' : {'master':True,'callbacks':[{},{},{}]},
     'constrain':True,
     'hold':True,
     'width':8,

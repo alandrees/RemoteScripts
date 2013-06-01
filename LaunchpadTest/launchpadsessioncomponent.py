@@ -5,7 +5,7 @@ from launchpadscenecomponent import LaunchpadSceneComponent
 from abletonlog import write_log
 
 class LaunchpadSessionComponent(SessionComponent):
-    __doc__ = "Class Extension of the Sesion Component to utilize the Launchpad"
+    """Class Extension of the Sesion Component to utilize the Launchpad"""
     
     def __init__(self, x, y, constrain):
         SessionComponent.__init__(self, x, y)

@@ -17,6 +17,7 @@ BIT_5 = int(32)
 
 SESSION_BUTTON = 0x6C
 
+SESSION_MODE = 1
 class LaunchpadSessionMode(LaunchpadMode):
     
     def __init__(self, nav, layout):
