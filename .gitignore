@@ -1,0 +1,17 @@
+_Framework/*
+_Generic/*
+_MxDCore/*
+_Serato/*
+_Tools/*
+_UserScript/*
+_AbletonPlus/*.pyc
+_AbletonPlus2/*.pyc
+BCFR2000Test/*.pyc
+BCR2000Test/*.pyc
+LaunchpadCHA/*.pyc
+LaunchpadCHB/*.pyc
+_LaunchpadDJ/*.pyc
+LaunchpadTest/*.pyc
+LaunchpadTest2/*.pyc
+*~
+\#*\#
