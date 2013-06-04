@@ -11,6 +11,9 @@ MODE_USER2 = 16
 MODE_MIXER = 32
 MODE_CONFIG = 64
 
+MODE_TRACK_SELECTOR = 128
+MODE_CLIP_SELECTOR  = 256
+
 class LaunchpadMode():
     
     def __init__(self):

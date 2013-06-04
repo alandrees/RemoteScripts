@@ -1,0 +1,19 @@
+Ableton Live Remotescripts
+
+Requires Live 8
+
+These scripts are what I use to run my production configuration, live configuration and DJ configuration.
+
+There are templates as well, and I will add those as I go, but for now I will leave them out.
+
+A brief rundown of what everything is:
+BCFR2000Test: Development version of the BCF2000 + BCR2000 controller I have configured here.  AbletonPlus2 enabled, and follow the Launchpad.
+BCR2000Test: Old testing version of my BCR2000 scripts, depreciated, for the most part.
+LaunchPadCHA: DJ Script for channel A.
+LaunchPadCHB: DJ Script for channel B.
+LaunchpadTest: Current working version of my Launchpad script, AbletonPlus2 enabled, and acting as a master controller.
+LaunchpadTest2: Not actually sure what this is.  I think it's an old version of LaunchpadTest, but still uses AbletonPlus version 1.  Not maintained, use at your own risk.
+_AbletonPlus: Test version of the inter-controller communication system.  Version 1, depreciated for the most part.
+_AbletonPlus2: Current version of the inter-controller communication system.  Version 2, significantly more general, easy to add functionality as I need to.
+_LaunchpadDJ: This is where all the code for my launchpad DJ script resides.  CHA and CHB load this module and branch off depening on if it passes an initialization variable of 0 or 1.
+.gitignore: mostly ignore .pyc and the pre-compiled Ableton classes.
