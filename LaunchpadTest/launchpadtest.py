@@ -210,7 +210,7 @@ class LPT(ControlSurface):
         track_selection_mode_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,USER_1_BUTTON)
         track_selection_mode_button.set_on_off_values(63,4)
 
-        self._trackselmode = LaunchpadTrackSelectionMode(self._buttonmatrix,self._ap,self.song(),1)
+        self._trackselmode = LaunchpadTrackSelectionMode(self._buttonmatrix,self._ap,self.song(),0)
         self._trackselmode.set_activator([TRACK_SELECT_BUTTON])
 
         self._mode.bind_mode(self._trackselmode, track_selection_mode_button, Modes.TRACK_MODE, 0)
