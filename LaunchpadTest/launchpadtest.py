@@ -16,9 +16,9 @@ from launchpadsessionmode import *
 from launchpadbuttonmatrix import LaunchpadButtonMatrix
 from launchpadmodeselectorcomponent import LaunchpadModeSelectorComponent
 from launchpadtrackselectormode import *
+from launchpadclipselectormode import *
 
-
-from launchpaduser1mode import LaunchpadUser1ModeMod
+#from launchpaduser1mode import LaunchpadUser1ModeMod
 #from launchpaduser2mode import LaunchpadUser2Mode
 #from launchpadmixermode import LaunchpadMixerMode
 
@@ -29,10 +29,12 @@ LEFT_BUTTON = 0x6A
 RIGHT_BUTTON = 0x6B
 SESSION_BUTTON = 0x6C
 USER_1_BUTTON = 0x6D
-TRACK_SELECT_BUTTON = USER_1_BUTTON
 USER_2_BUTTON = 0x6E
 MIXER_BUTTON = 0x6F
 
+TRACK_SELECT_BUTTON = USER_1_BUTTON
+CLIP_SELECT_BUTTON = USER_2_BUTTON
+TRACK_CLIP_VIEW_BUTTON = MIXER_BUTTON
 
 ####ableton plus events:
 ##Events:
@@ -53,6 +55,8 @@ class LPT(ControlSurface):
     
     def __init__(self,c_instance):
         ControlSurface.__init__(self, c_instance)
+        
+        self._clip_device_view_change_button = None
         
         #setup the navigation controls
         self.setup_nav()
@@ -81,7 +85,10 @@ class LPT(ControlSurface):
         #self.init_user1_mode()
         
         self.init_track_selection_mode()
-        #self.init_clip_selection_mode()
+        self.init_clip_selection_mode()
+        
+        self.init_toggle_view()
+
         #setup and add the user2 mode to the mode selector
         #self.init_user2_mode()
        
@@ -207,27 +214,54 @@ class LPT(ControlSurface):
 
     def init_track_selection_mode(self):
         """initializes the track selection mode, for when the button is held down"""
-        track_selection_mode_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,USER_1_BUTTON)
+        track_selection_mode_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,TRACK_SELECT_BUTTON)
         track_selection_mode_button.set_on_off_values(63,4)
 
-        self._trackselmode = LaunchpadTrackSelectionMode(self._buttonmatrix,self._ap,self.song(),0)
+        self._trackselmode = LaunchpadTrackSelectionMode(self._buttonmatrix,self._ap,self.song(),1)
         self._trackselmode.set_activator([TRACK_SELECT_BUTTON])
 
         self._mode.bind_mode(self._trackselmode, track_selection_mode_button, Modes.TRACK_MODE, 0)
 
     def init_clip_selection_mode(self):
         """initializes the clip selection mode, for when the button is held down"""
-        track_selection_mode_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,USER_1_BUTTON)
+        track_selection_mode_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,CLIP_SELECT_BUTTON)
         track_selection_mode_button.set_on_off_values(63,4)
 
-        self._trackselmode = LaunchpadTrackSelectionMode(self._buttonmatrix, self._ap, 0)
-        self._trackselmode.set_activator([USER_1_BUTTON])
+        self._trackselmode = LaunchpadClipSelectionMode(self._buttonmatrix, self._ap,self.song())
+        self._trackselmode.set_activator([CLIP_SELECT_BUTTON])
 
         self._mode.bind_mode(self._trackselmode, track_selection_mode_button, Modes.CLIP_MODE, 0)
 
-        pass
+    def init_toggle_view(self):
+        """sets up the mixer button the launchpad to toggle between the clip and device views"""
+        self._clip_device_view_change_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,TRACK_CLIP_VIEW_BUTTON)
+        self._clip_device_view_change_button.set_on_off_values(63,15)
         
-    
+
+        self._clip_device_view_change_button.add_value_listener(self.toggle_view)
+
+        if Live.Application.get_application().view.is_view_visible(u"Detail/Clip"):
+            self._clip_device_view_change_button.turn_on()
+        elif Live.Application.get_application().view.is_view_visible(u"Detail/DeviceChain"):
+            self._clip_device_view_change_button.turn_off()
+
+
+
+    def toggle_view(self, value):
+        if value == 0:
+            if Live.Application.get_application().view.is_view_visible(u"Detail/Clip"):
+                Live.Application.get_application().view.show_view(u"Detail/DeviceChain")
+                self._clip_device_view_change_button.turn_off()
+            elif Live.Application.get_application().view.is_view_visible(u"Detail/DeviceChain"):
+                Live.Application.get_application().view.show_view(u"Detail/Clip")
+                self._clip_device_view_change_button.turn_on()
+
+            
+            #Live.Application.get_application().view.show_view(u"Detail/Clip")
+            
+        
+         
+    """    
     def init_user1_mode(self):
         user1_mode_button = LaunchpadButtonComponent(options['hold'], MIDI_CC_TYPE,0,USER_1_BUTTON)
         user1_mode_button.set_on_off_values(63,4)
@@ -254,7 +288,7 @@ class LPT(ControlSurface):
         self._mixermode.set_activator([MIXER_BUTTON])
         
         self._mode.bind_mode(self._mixermode, mixer_mode_button, Modes.MIXER_MODE, 0)
-    
+    """    
     def shutdown_sequence(self):
         #todo: cool shutdown animation :P
         pass
