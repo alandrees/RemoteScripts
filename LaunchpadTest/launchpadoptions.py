@@ -1,16 +1,9 @@
 import Live
 #from _AbletonPlus.Options import Options
+from launchpadmode import Modes
 
 MODE_XY = 1
 MODE_DRUM = 2
-
-NO_MODES = -1
-INIT_MODE = 0
-SESSION_MODE = 1
-USER_MODE_1 = 2
-USER_MODE_2 = 4
-MIXER_MODE  = 8
-OPTIONS_MODE = 16
 
 options = {
     'abletonplus' : {'master':True,'callbacks':[{},{},{}]},
@@ -21,7 +14,7 @@ options = {
     'defaultgridmode':MODE_XY,
     'disabledmodes': 2+4+8+16,
     'highlightfollowslaunch':False,
-    'defaultmode': SESSION_MODE
+    'defaultmode': Modes.SESSION_MODE
     }
 
 

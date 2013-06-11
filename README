@@ -17,3 +17,5 @@ _AbletonPlus: Test version of the inter-controller communication system.  Versio
 _AbletonPlus2: Current version of the inter-controller communication system.  Version 2, significantly more general, easy to add functionality as I need to.
 _LaunchpadDJ: This is where all the code for my launchpad DJ script resides.  CHA and CHB load this module and branch off depening on if it passes an initialization variable of 0 or 1.
 .gitignore: mostly ignore .pyc and the pre-compiled Ableton classes.
+
+Should be noted, the BCR2000 and BCF2000 need special mappings, which I will get sysex dumps of.

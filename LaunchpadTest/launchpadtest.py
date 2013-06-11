@@ -10,14 +10,18 @@ from _AbletonPlus2.abletonlog import *
 
 ##CUSTOM LAUNCHPAD COMPONENTS
 from launchpadmode import *
-from launchpadoptions import options
+from launchpadoptions import *
+
 from launchpadsessionmode import *
 from launchpadbuttonmatrix import LaunchpadButtonMatrix
 from launchpadmodeselectorcomponent import LaunchpadModeSelectorComponent
+from launchpadtrackselectormode import *
 
-#from launchpaduser1mode import LaunchpadUser1Mode
+
+from launchpaduser1mode import LaunchpadUser1ModeMod
 #from launchpaduser2mode import LaunchpadUser2Mode
 #from launchpadmixermode import LaunchpadMixerMode
+
 
 UP_BUTTON = 0x68
 DOWN_BUTTON = 0x69
@@ -25,6 +29,7 @@ LEFT_BUTTON = 0x6A
 RIGHT_BUTTON = 0x6B
 SESSION_BUTTON = 0x6C
 USER_1_BUTTON = 0x6D
+TRACK_SELECT_BUTTON = USER_1_BUTTON
 USER_2_BUTTON = 0x6E
 MIXER_BUTTON = 0x6F
 
@@ -44,7 +49,7 @@ MIXER_BUTTON = 0x6F
 
 #write_log(str(dir()))
 class LPT(ControlSurface):
-    """Launchpad Source Built from the ground up"""
+    """Launchpad remote script built from the ground up"""
     
     def __init__(self,c_instance):
         ControlSurface.__init__(self, c_instance)
@@ -63,6 +68,11 @@ class LPT(ControlSurface):
         #setup and add the sessionmode to the mode selector
         self.init_session_mode()
         
+        #init both the track selection mode and clip selection modes.
+        #self.init_track_selection_mode()
+        #self.init_clip_selection_mode()
+
+        
         #setup the abletonplus callback array
         self._setup_ap_options()
         
@@ -70,6 +80,8 @@ class LPT(ControlSurface):
         #setup and add the user1 mode to the mode selector
         #self.init_user1_mode()
         
+        self.init_track_selection_mode()
+        #self.init_clip_selection_mode()
         #setup and add the user2 mode to the mode selector
         #self.init_user2_mode()
        
@@ -80,6 +92,8 @@ class LPT(ControlSurface):
         #user2_mode_button.set_on_off_values(60,28)
         
         #write_log(str(dir(self._nav)))
+
+
         self._mode.set_mode(options['defaultmode'])
                 
         self._ap.enable_abletonplus()
@@ -189,7 +203,30 @@ class LPT(ControlSurface):
         self._sessionmode = LaunchpadSessionMode(self._nav, self._buttonmatrix)
         self._sessionmode.set_activator([SESSION_BUTTON])
        
-        self._mode.bind_mode(self._sessionmode, session_mode_button, SESSION_MODE, 0)
+        self._mode.bind_mode(self._sessionmode, session_mode_button, Modes.SESSION_MODE, 0)
+
+    def init_track_selection_mode(self):
+        """initializes the track selection mode, for when the button is held down"""
+        track_selection_mode_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,USER_1_BUTTON)
+        track_selection_mode_button.set_on_off_values(63,4)
+
+        self._trackselmode = LaunchpadTrackSelectionMode(self._buttonmatrix,self._ap,self.song(),1)
+        self._trackselmode.set_activator([TRACK_SELECT_BUTTON])
+
+        self._mode.bind_mode(self._trackselmode, track_selection_mode_button, Modes.TRACK_MODE, 0)
+
+    def init_clip_selection_mode(self):
+        """initializes the clip selection mode, for when the button is held down"""
+        track_selection_mode_button = LaunchpadButtonComponent(options['hold'],MIDI_CC_TYPE,0,USER_1_BUTTON)
+        track_selection_mode_button.set_on_off_values(63,4)
+
+        self._trackselmode = LaunchpadTrackSelectionMode(self._buttonmatrix, self._ap, 0)
+        self._trackselmode.set_activator([USER_1_BUTTON])
+
+        self._mode.bind_mode(self._trackselmode, track_selection_mode_button, Modes.CLIP_MODE, 0)
+
+        pass
+        
     
     def init_user1_mode(self):
         user1_mode_button = LaunchpadButtonComponent(options['hold'], MIDI_CC_TYPE,0,USER_1_BUTTON)
@@ -198,7 +235,7 @@ class LPT(ControlSurface):
         self._user1mode = LaunchpadUser1Mode(self._buttonmatrix)
         self._user1mode.set_activator([USER_1_BUTTON])
         
-        self._mode.bind_mode(self._user1mode, user1_mode_button, USER_MODE_1, 0)
+        self._mode.bind_mode(self._user1mode, user1_mode_button, Modes.TRACK_MODE, 0)
     
     def init_user2_mode(self):
         user2_mode_button = LaunchpadButtonComponent(options['hold'], MIDI_CC_TYPE,0,USER_2_BUTTON)
@@ -207,7 +244,7 @@ class LPT(ControlSurface):
         self._user2mode = LaunchpadUser2Mode(self._buttonmatrix)
         self._user2mode.set_activator([USER_2_BUTTON])
         
-        self._mode.bind_mode(self._user2mode, user2_mode_button, USER_MODE_2, 0)
+        self._mode.bind_mode(self._user2mode, user2_mode_button, Modes.USER_MODE_2, 0)
     
     def init_mixer_mode(self):
         mixer_mode_button = LaunchpadButtonComponent(options['hold'], MIDI_CC_TYPE,0,MIXER_BUTTON)
@@ -216,7 +253,7 @@ class LPT(ControlSurface):
         self._mixermode = LaunchpadMixerMode(self._nav, self._buttonmatrix, mixer_mode_button)
         self._mixermode.set_activator([MIXER_BUTTON])
         
-        self._mode.bind_mode(self._mixermode, mixer_mode_button, MIXER_MODE, 0)
+        self._mode.bind_mode(self._mixermode, mixer_mode_button, Modes.MIXER_MODE, 0)
     
     def shutdown_sequence(self):
         #todo: cool shutdown animation :P

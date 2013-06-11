@@ -7,7 +7,7 @@ from launchpadchannelstripcomponent import LaunchpadChannelStripComponent
 class LaunchpadMixerComponent(MixerComponent):
     '''Add some additional functionality to the mixer component'''
     
-    def __init__(self, num_tracks, num_returns=0, with_eqs=False, with_filters=False):
+    def __init__(self, num_tracks, num_returns=3, with_eqs=False, with_filters=False):
         MixerComponent.__init__(self, num_tracks, num_returns,with_eqs,with_filters)
         
         self._master_stopall_button = None
@@ -20,7 +20,7 @@ class LaunchpadMixerComponent(MixerComponent):
         self._master_solo_pressed = None
         
         self._master_arm_button = None
-        self._master_armg_pressed = None
+        self._master_arm_pressed = None
     
     def get_channel_strips(self):
         return self._channel_strips

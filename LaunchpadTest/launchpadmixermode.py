@@ -79,7 +79,7 @@ class LaunchpadMixerMode(LaunchpadMode):
         if self._enable == True:
             self.set_state(MIXER_STATE_MAIN)
         
-    def enable(self, buttons):
+    def enable(self, buttons, oldmode):
         self._layout.set_grid_mapping_mode(1)
         self.update_track_offset(True)
         self._current_tracks = self._mixer.get_channel_strips()
@@ -90,7 +90,7 @@ class LaunchpadMixerMode(LaunchpadMode):
             buttons[i].turn_on()
         return None
     
-    def disable(self, buttons):
+    def disable(self, buttons, newmode):
         layout = self._layout.get_active_mapping_array()
         self.set_state(MIXER_STATE_INIT)
         

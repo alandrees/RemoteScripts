@@ -5,7 +5,8 @@ from _Framework.ButtonMatrixElement import ButtonMatrixElement
 
 from launchpadsessioncomponent import LaunchpadSessionComponent
 from launchpadbuttoncomponent import LaunchpadButtonComponent
-from launchpadmode import LaunchpadMode
+from launchpadmode import LaunchpadMode,Modes
+from _AbletonPlus2.abletonlog import write_log
 
 #used for bitfields of the commands to be sent to the launchpad
 BIT_0 = int(1)
@@ -17,7 +18,6 @@ BIT_5 = int(32)
 
 SESSION_BUTTON = 0x6C
 
-SESSION_MODE = 1
 class LaunchpadSessionMode(LaunchpadMode):
     
     def __init__(self, nav, layout):
@@ -25,7 +25,7 @@ class LaunchpadSessionMode(LaunchpadMode):
         self._nav = nav
         self._layout = layout
 
-    def enable(self, buttons):
+    def enable(self, buttons,oldmode):
         self._enable = True
         self._layout.set_grid_mapping_mode(1)
         layout = self._layout.get_active_mapping_array()
@@ -42,6 +42,7 @@ class LaunchpadSessionMode(LaunchpadMode):
                 clip_slot.set_noclip_value(BIT_2 + BIT_3)
                 clip_slot.set_launch_button(layout[scene_index][track_index])
             scene.set_launch_button(layout[scene_index][track_index + 1])
+        self._nav.set_enabled(True)
         for i in range(len(buttons)):
             buttons[i].turn_on()
         
@@ -49,26 +50,27 @@ class LaunchpadSessionMode(LaunchpadMode):
         
         return None
     
-    def disable(self, buttons):
+    def disable(self, buttons, newmode):
         self._enable = False
-        layout = self._layout.get_active_mapping_array()
-        for scene_index in range(self._nav.height()):
-            scene = self._nav.scene(scene_index)
-            for track_index in range(self._nav.width()):
-                clip_slot = scene.clip_slot(track_index)
-                clip_slot._launch_button.remove_value_listener(clip_slot._launch_value)
-                clip_slot._launch_button = None
-            scene._launch_button.remove_value_listener(scene._launch_value)
-            scene._launch_button = None
+        #write_log(str(newmode != Modes.TRACK_MODE))
+        if (newmode != Modes.TRACK_MODE) and (newmode != Modes.CLIP_MODE):
+            for scene_index in range(self._nav.height()):
+                scene = self._nav.scene(scene_index)
+                for track_index in range(self._nav.width()):
+                    clip_slot = scene.clip_slot(track_index)
+                    clip_slot._launch_button.remove_value_listener(clip_slot._launch_value)
+                    clip_slot._launch_button = None
+                scene._launch_button.remove_value_listener(scene._launch_value)
+                scene._launch_button = None
                 
-        layout = self._layout.get_active_mapping_array()
+            layout = self._layout.get_active_mapping_array()
         
-        for i in range(8):
-            for j in range(8):
-                layout[i][j].turn_off()
+            for i in range(8):
+                for j in range(8):
+                    layout[i][j].turn_off()
                 
         for i in range(len(buttons)):
             buttons[i].turn_off()
             
-        #self._nav.set_enabled(False)
+        self._nav.set_enabled(False)
         return None

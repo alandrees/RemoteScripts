@@ -3,19 +3,22 @@ import Live
 from _Framework.ControlSurfaceComponent import ControlSurfaceComponent
 from _Framework.ChannelStripComponent import ChannelStripComponent
 from _Framework.ButtonElement import *
+from _AbletonPlus2.writelog import write_log
 
 class LaunchpadChannelStripComponent(ChannelStripComponent):
+
     
     def __init__(self):
         ChannelStripComponent.__init__(self)
-        self._stopall_button = None
-        
+        self._stopall_button = None        
+
     def get_track(self):
         if(self._track != None):
             return self._track
         else:
             return None
     def sends_count(self):
+    
         return len(self._track.mixer_device.sends)
     
     def set_stopall_button(self, button):
@@ -56,7 +59,8 @@ class LaunchpadChannelStripComponent(ChannelStripComponent):
                     self._stopall_button.send_value(13,True)
     
     def set_track(self, track):
-        #assert isinstance(track, type(None), Live.Track.Track)
+
+        assert isinstance(track, type(None), Live.Track.Track)
         assert ((track == None) or isinstance(track, Live.Track.Track))
         if (self._track != None):
             if (self._track != self.song().master_track):

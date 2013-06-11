@@ -15,14 +15,15 @@ class LaunchpadUser2Mode(LaunchpadMode):
     def __init__(self,layout):
         LaunchpadMode.__init__(self)
         self._layout = layout
-    def enable(self, buttons):
+
+    def enable(self, buttons, oldmode):
         self._enable = True
         self._layout.set_grid_mapping_mode(2)
         for i in range(len(buttons)):
             buttons[i].turn_on()
         return None
     
-    def disable(self, buttons):
+    def disable(self, buttons,newmode):
         self._enable = False
         for i in range(len(buttons)):
             buttons[i].turn_off()
